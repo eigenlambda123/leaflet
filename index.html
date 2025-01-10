@@ -45,6 +45,21 @@
 		var singleMarker = L.marker([12.8797,  121.7740]);
 		var popup = singleMarker.bindPopup('<b>Philippines</b>').openPopup()
 		popup.addTo(map);
+
+		// Convert to GeoJSON
+		console.log(singleMarker.toGeoJSON());
+
+		// Layer Control
+		var baseMaps = {
+			"OSM": osm,
+			"Google Streets": googleStreets,
+		};
+
+		var overlayMaps = {
+			"Marker": singleMarker	
+		};
+
+		L.control.layers(baseMaps, overlayMaps).addTo(map);
 	</script>
 	
 </body>
