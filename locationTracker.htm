@@ -68,11 +68,16 @@
         function getPosition(position) {
             console.log(position.coords.latitude, position.coords.longitude)
             var lat = position.coords.latitude
-            var long = position.coords.longitude
+            var long = position.coords.longitude   
             var accuracy = position.coords.accuracy
 
+            var marker = L.marker([lat, long])
+            var circle = L.circle([lat, long], {radius: accuracy})
+
+            var featureGroup = L.featureGroup([marker, circle]).addTo(map);
+
             console.log("Your current location is, Lat: ", lat,"Long:", long, "Accuracy:", accuracy)
-            
+
         }
 	</script>
 	
