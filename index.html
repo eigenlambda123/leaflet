@@ -60,6 +60,15 @@
 		};
 
 		L.control.layers(baseMaps, overlayMaps).addTo(map);
+
+		// Leaflet Events
+		map.on('mouseover', function() {
+			console.log('Your mouse is over the map');
+		})
+
+		map.on('mousemove', function(e) {
+			console.log(e);
+		})
 	</script>
 	
 </body>
