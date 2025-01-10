@@ -38,8 +38,13 @@
 			maxZoom: 20,
 			subdomains:['mt0','mt1','mt2','mt3']
 		});
-		
+
 		// googleStreets.addTo(map);
+
+		// Marker
+		var singleMarker = L.marker([12.8797,  121.7740]);
+		var popup = singleMarker.bindPopup('<b>Philippines</b>').openPopup()
+		popup.addTo(map);
 	</script>
 	
 </body>
