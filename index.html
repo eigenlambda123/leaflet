@@ -24,7 +24,7 @@
 
 	<script>
 		// Map Initialization
-		var map = L.map('map').setView([51.505, -0.09], 13);
+		var map = L.map('map').setView([12.8797,  121.7740], 10);
 
 		// osm layer
 		var osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -32,6 +32,14 @@
 		});
 
 		osm.addTo(map);
+
+		// google street map
+		googleStreets = L.tileLayer('http://{s}.google.com/vt?lyrs=m&x={x}&y={y}&z={z}',{
+			maxZoom: 20,
+			subdomains:['mt0','mt1','mt2','mt3']
+		});
+		
+		// googleStreets.addTo(map);
 	</script>
 	
 </body>
