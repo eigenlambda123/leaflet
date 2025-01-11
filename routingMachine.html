@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaflet</title>
+
+	<!---Leaflet CSS-->
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+    <!---Leaflet routing Machine CSS-->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+
+
+	<style>
+		#map {
+			width: 100%;
+			height: 100vh;
+		}
+	</style>
+
+</head>
+<body>
+	<div id="map"></div>
+
+	<!---Leaflet JS-->
+	<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    
+
+    <!-- leaflet-routing-machine JS -->
+    <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+
+	<script>
+		// Map Initialization
+		var map = L.map('map').setView([12.8797,  121.7740], 10);
+
+		// osm layer
+		var osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+			attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+		});
+
+
+		// google street map
+		googleStreets = L.tileLayer('http://{s}.google.com/vt?lyrs=m&x={x}&y={y}&z={z}',{
+			maxZoom: 20,
+			subdomains:['mt0','mt1','mt2','mt3']
+		});
+
+		googleStreets.addTo(map);
+
+		// First Marker
+		var singleMarker = L.marker([12.8797,  121.7740]);
+		var popup = singleMarker.bindPopup('<b>Philippines</b>').openPopup()
+		popup.addTo(map);
+
+
+		// map click event
+		map.on('click', function(e) {
+			console.log(e)
+			var secondMarker = L.marker([e.latlng.lat, e.latlng.lng]).addTo(map)
+			
+			// Will Initialzie the route
+			var marker = L.marker([12.8797,  121.7740]).addTo(map); // Marker that move
+			L.Routing.control({
+				waypoints: [
+					L.latLng(12.8797,  121.7740),
+					L.latLng(e.latlng.lat, e.latlng.lng)
+				]
+			}).on('routesfound', function(e) {
+				console.log(e)
+				e.routes[0].coordinates.forEach(function(coord, index){
+					setTimeout(() => {
+						marker.setLatLng([coord.lat, coord.lng])
+					}, 100 * index);
+				})
+			})
+			
+			.addTo(map);
+
+		})
+
+        // Layer Control
+		var baseMaps = {
+			"OSM": osm,
+			"Google Streets": googleStreets,
+		};
+
+		var overlayMaps = {
+			"Marker": singleMarker	
+		};
+
+		L.control.layers(baseMaps, overlayMaps).addTo(map);
+
+	</script>
+	
+</body>
+</html>
