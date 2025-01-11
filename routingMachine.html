@@ -14,8 +14,8 @@
 
 	<style>
 		#map {
-			width: 100%;
-			height: 100vh;
+			width: 80%;
+			height: 80vh;
 		}
 	</style>
 
@@ -49,9 +49,32 @@
 		googleStreets.addTo(map);
 
 		// First Marker
-		var singleMarker = L.marker([12.8797,  121.7740]);
-		var popup = singleMarker.bindPopup('<b>Philippines</b>').openPopup()
-		popup.addTo(map);
+		var singleMarker = L.marker([38.7946,  106.5348]);
+		singleMarker.bindPopup('<b>China</b>').openPopup().addTo(map);
+
+        // Dropdown for transportation options
+        var transportModes = {
+            'Walking': 'foot',
+            'Biking': 'bike',
+            'Driving': 'car'
+        };
+
+        // Create dropdown for transportation type
+        var selectElement = L.DomUtil.create('select', 'transport-select');
+        Object.keys(transportModes).forEach(function(mode) {
+            var option = L.DomUtil.create('option', '', selectElement);
+            option.value = transportModes[mode];
+            option.innerHTML = mode;
+        });
+        document.body.appendChild(selectElement);
+
+        // Default transport mode
+        var currentMode = 'foot';  // Default mode (Walking)
+
+        // Update mode when user changes the dropdown
+        selectElement.addEventListener('change', function() {
+            currentMode = selectElement.value;
+        });
 
 
 		// map click event
@@ -60,12 +83,17 @@
 			var secondMarker = L.marker([e.latlng.lat, e.latlng.lng]).addTo(map)
 			
 			// Will Initialzie the route
-			var marker = L.marker([12.8797,  121.7740]).addTo(map); // Marker that move
+			var marker = L.marker([38.7946,  106.5348]).addTo(map); // Marker that move
 			L.Routing.control({
 				waypoints: [
-					L.latLng(12.8797,  121.7740),
+					L.latLng(38.7946,  106.5348),
 					L.latLng(e.latlng.lat, e.latlng.lng)
-				]
+				],
+                routeWhileDragging: true,
+                createMarker: function() { return null; },  // No markers for waypoints
+                router: L.Routing.osrmv1({
+                    profile: currentMode  // Use selected transport mode
+                })
 			}).on('routesfound', function(e) {
 				console.log(e)
 				e.routes[0].coordinates.forEach(function(coord, index){
