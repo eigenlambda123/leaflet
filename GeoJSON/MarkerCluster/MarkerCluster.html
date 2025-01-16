@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaflet</title>
+
+	<!---Leaflet CSS-->
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+    <!-- markercluster ?\ -->
+    <link rel="stylesheet" href="./dist/MarkerCluster.css">
+    <link rel="stylesheet" href="./dist/MarkerCluster.Default.css">
+	<style>
+		#map {
+			width: 100%;
+			height: 100vh;
+		}
+	</style>
+
+</head>
+<body>
+	<div id="map"></div>
+
+    <script src="./PedestrianCrossings.js"></script>
+
+	<!---Leaflet JS-->
+	<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <!-- Makercluster -->
+    <script src="./dist/leaflet.markercluster.js"></script>
+
+	<script>
+		// Map Initialization
+		var map = L.map('map').setView([33.0346,  137.5756], 5);
+
+		// osm layer
+		var osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+			attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+		});
+
+		osm.addTo(map);
+
+    const geojsonMarkerOptions = {
+        radius: 8,
+        fillColor: "#ff7800",
+        color: "#000",
+        weight: 1,
+        opacity: 1,
+        fillOpacity: 0.8
+    };
+
+    const markers = L.markerClusterGroup();
+
+    // loading geojson
+    L.geoJSON(data, {
+        pointToLayer: function (feature, latlng){
+            return markers.addLayer(L.circleMarker(latlng, geojsonMarkerOptions))
+        }
+    }).addTo(map);
+
+    // marker clustering 
+   
+    map.addLayer(markers);
+
+
+	</script>
+	
